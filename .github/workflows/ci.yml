@@ -192,22 +192,13 @@ jobs:
                   # Create output directory
                   mkdir -p "../../../test_results/${MODULE_PATH}"
 
-                  # Run test with specified profile
-                  if [ "${{ matrix.profile }}" == "docker" ]; then
-                      PROFILE_FLAG="-with-docker"
-                  elif [ "${{ matrix.profile }}" == "singularity" ]; then
-                      PROFILE_FLAG="-with-singularity"
-                  else
-                      PROFILE_FLAG=""
-                  fi
-
                   # Run test workflow
+                  # Docker is already enabled in tests/config/nextflow.config (docker.enabled = true)
                   # Nextflow will automatically detect and run the workflow defined in main.nf
                   nextflow run main.nf \
                       -c nextflow.config \
                       -c ../../../config/nextflow.config \
                       --outdir "../../../test_results/${MODULE_PATH}" \
-                      $PROFILE_FLAG \
                       -with-report "../../../test_results/${MODULE_PATH}/report.html" \
                       -with-trace "../../../test_results/${MODULE_PATH}/trace.txt" \
                       || exit 1
