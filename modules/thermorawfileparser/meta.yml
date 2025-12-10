@@ -40,4 +40,5 @@ output:
       pattern: "versions.yml"
 authors:
   - "@daichengxin"
+  - "@ypriverol"
 
