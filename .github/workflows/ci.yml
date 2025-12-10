@@ -42,3 +42,139 @@ jobs:
 
             - name: Run editorconfig-checker
               run: ec
+
+    detect-changed-modules:
+        runs-on: ubuntu-latest
+        outputs:
+            modules: ${{ steps.set-modules.outputs.modules }}
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Install jq
+              run: sudo apt-get update && sudo apt-get install -y jq
+
+            - name: Detect changed modules
+              id: set-modules
+              run: |
+                  # Get base branch for comparison
+                  if [ "${{ github.event_name }}" == "pull_request" ]; then
+                      BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+                  else
+                      BASE_BRANCH="${{ github.base_ref }}"
+                  fi
+                  
+                  # Fallback to main if base_ref is empty
+                  if [ -z "$BASE_BRANCH" ]; then
+                      BASE_BRANCH="main"
+                  fi
+                  
+                  echo "Comparing against base branch: $BASE_BRANCH"
+                  
+                  # Get changed files
+                  if [ "${{ github.event_name }}" == "pull_request" ]; then
+                      CHANGED_FILES=$(git diff --name-only origin/$BASE_BRANCH...HEAD)
+                  else
+                      CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+                  fi
+                  
+                  echo "Changed files:"
+                  echo "$CHANGED_FILES"
+                  
+                  # Extract unique module paths
+                  CHANGED_MODULES=()
+                  
+                  while IFS= read -r file; do
+                      # Check if file is in modules directory
+                      if [[ "$file" =~ ^modules/([^/]+)/([^/]+)/ ]]; then
+                          org="${BASH_REMATCH[1]}"
+                          module="${BASH_REMATCH[2]}"
+                          module_path="${org}/${module}"
+                          
+                          # Check if test exists for this module
+                          if [ -d "tests/modules/${module_path}" ]; then
+                              # Add to list if not already present
+                              if [[ ! " ${CHANGED_MODULES[@]} " =~ " ${module_path} " ]]; then
+                                  CHANGED_MODULES+=("${module_path}")
+                              fi
+                          fi
+                      fi
+                      
+                      # Also check if test files themselves changed
+                      if [[ "$file" =~ ^tests/modules/([^/]+)/([^/]+)/ ]]; then
+                          org="${BASH_REMATCH[1]}"
+                          module="${BASH_REMATCH[2]}"
+                          module_path="${org}/${module}"
+                          
+                          if [[ ! " ${CHANGED_MODULES[@]} " =~ " ${module_path} " ]]; then
+                              CHANGED_MODULES+=("${module_path}")
+                          fi
+                      fi
+                  done <<< "$CHANGED_FILES"
+                  
+                  # Convert array to JSON array for GitHub Actions
+                  if [ ${#CHANGED_MODULES[@]} -eq 0 ]; then
+                      echo "modules=[]" >> $GITHUB_OUTPUT
+                      echo "No changed modules with tests found."
+                  else
+                      MODULES_JSON=$(printf '%s\n' "${CHANGED_MODULES[@]}" | jq -R . | jq -s .)
+                      echo "modules=$MODULES_JSON" >> $GITHUB_OUTPUT
+                      echo "Changed modules with tests:"
+                      printf '%s\n' "${CHANGED_MODULES[@]}"
+                  fi
+
+    test-modules:
+        needs: detect-changed-modules
+        runs-on: ubuntu-latest
+        if: needs.detect-changed-modules.outputs.modules != '[]'
+        strategy:
+            fail-fast: false
+            matrix:
+                module: ${{ fromJson(needs.detect-changed-modules.outputs.modules) }}
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Install Nextflow
+              uses: nf-core/setup-nextflow@v1
+              with:
+                  version: "23.10.0"
+
+            - name: Run test for ${{ matrix.module }}
+              run: |
+                  MODULE_PATH="${{ matrix.module }}"
+                  TEST_DIR="tests/modules/${MODULE_PATH}"
+                  
+                  echo "Testing module: ${MODULE_PATH}"
+                  echo "Test directory: ${TEST_DIR}"
+                  
+                  if [ ! -d "${TEST_DIR}" ]; then
+                      echo "Error: Test directory ${TEST_DIR} not found"
+                      exit 1
+                  fi
+                  
+                  cd "${TEST_DIR}"
+                  
+                  # Create output directory
+                  mkdir -p "../../../test_results/${MODULE_PATH}"
+                  
+                  # Run test with Docker
+                  # Note: Test data should be configured via params.test_data in the test workflow
+                  nextflow run main.nf \
+                      -c nextflow.config \
+                      -c ../../config/nextflow.config \
+                      --outdir "../../../test_results/${MODULE_PATH}" \
+                      -with-docker \
+                      -with-report "../../../test_results/${MODULE_PATH}/report.html" \
+                      -with-trace "../../../test_results/${MODULE_PATH}/trace.txt" \
+                      || exit 1
+
+            - name: Upload test results
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: test-results-${{ matrix.module }}
+                  path: test_results/${{ matrix.module }}/
+                  retention-days: 7
