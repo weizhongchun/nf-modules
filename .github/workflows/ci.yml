@@ -120,7 +120,12 @@ jobs:
                       echo "No changed modules with tests found."
                   else
                       MODULES_JSON=$(printf '%s\n' "${CHANGED_MODULES[@]}" | jq -R . | jq -s .)
-                      echo "modules=$MODULES_JSON" >> $GITHUB_OUTPUT
+                      # Use delimiter for multiline output
+                      {
+                          echo "modules<<EOF"
+                          echo "$MODULES_JSON"
+                          echo "EOF"
+                      } >> $GITHUB_OUTPUT
                       echo "Changed modules with tests:"
                       printf '%s\n' "${CHANGED_MODULES[@]}"
                   fi
