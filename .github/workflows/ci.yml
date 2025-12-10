@@ -193,9 +193,12 @@ jobs:
                       exit 1
                   fi
 
-                  # Run nf-test with Docker profile
+                  # Create test results directory
+                  mkdir -p test_results/${MODULE_PATH}
+
+                  # Run nf-test
+                  # Docker is configured in tests/config/nextflow.config
                   nf-test test \
-                      --profile ${{ matrix.profile }} \
                       --tap test_results/${MODULE_PATH}/test.tap \
                       ${TEST_FILE}
 
