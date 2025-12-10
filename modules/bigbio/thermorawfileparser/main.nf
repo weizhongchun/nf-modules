@@ -46,5 +46,18 @@ process THERMORAWFILEPARSER {
         ThermoRawFileParser: \$(ThermoRawFileParser.sh --version)
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+
+    """
+    touch ${prefix}.mzML
+    touch ${prefix}_conversion.log
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        ThermoRawFileParser: \$(ThermoRawFileParser.sh --version)
+    END_VERSIONS
+    """
 }
 
