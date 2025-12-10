@@ -180,6 +180,8 @@ jobs:
                   sudo mv nf-test /usr/local/bin/
 
             - name: Run nf-test for ${{ matrix.module }}
+              env:
+                  PROFILE: ${{ matrix.profile }}
               run: |
                   MODULE_PATH="${{ matrix.module }}"
                   TEST_FILE="modules/${MODULE_PATH}/tests/main.nf.test"
