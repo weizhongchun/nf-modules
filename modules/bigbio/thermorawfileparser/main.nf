@@ -35,9 +35,6 @@ process THERMORAWFILEPARSER {
     path "*.log",   emit: log
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
-
     """
     ThermoRawFileParser.sh -i=${rawfile} -f=2 -o=./ 2>&1 | tee ${rawfile.baseName}_conversion.log
 
