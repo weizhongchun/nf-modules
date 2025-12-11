@@ -31,7 +31,7 @@ process THERMORAWFILEPARSER {
     tuple val(meta), path(rawfile)
 
     output:
-    tuple val(meta), path("*.{mzML,mgf}"), emit: convert_files
+    tuple val(meta), path("*.{mzML,mgf,parquet}"), emit: convert_files
     path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
