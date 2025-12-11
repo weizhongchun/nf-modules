@@ -37,7 +37,6 @@ process THERMORAWFILEPARSER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
     // Default to indexed mzML format (-f=2) if not specified in args
     def formatArg = args.contains('-f=') ? '' : '-f=2'
 
