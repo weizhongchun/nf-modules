@@ -9,7 +9,7 @@ process PMULTIQC {
 
     input:
     tuple val(meta), path(results)
-    path multiqc_config
+    path multiqc_config, optional: true
 
     output:
     tuple val(meta), path("*.html"), emit: report
@@ -31,7 +31,7 @@ process PMULTIQC {
     multiqc \\
         -f \\
         ${args} \\
-        --config ${multiqc_config} \\
+        ${multiqc_config ? "--config ${multiqc_config}" : ""} \\
         ${results} \\
         -o .
 

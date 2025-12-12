@@ -14,8 +14,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file(params.test_data['proteomics']['qc']['results'], checkIfExists: false),
-                    file(params.test_data['proteomics']['qc']['multiqc_config'], checkIfExists: false)
+                    file(params.test_data['proteomics']['qc']['results'], checkIfExists: false)
                 ]
                 """
             }
@@ -38,8 +37,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test_sample' ],
-                    file(params.test_data['proteomics']['qc']['results'], checkIfExists: false),
-                    file(params.test_data['proteomics']['qc']['multiqc_config'], checkIfExists: false)
+                    file(params.test_data['proteomics']['qc']['results'], checkIfExists: false)
                 ]
                 """
             }
@@ -57,14 +55,11 @@ nextflow_process {
 
         when {
             process {
-                ext {
-                    args = '--quantification_method diann'
-                }
+                task.ext.args = '--quantification_method diann'
                 """
                 input[0] = [
                     [ id: 'DIANN_test' ],
-                    file(params.test_data['proteomics']['qc']['diann_results'], checkIfExists: false),
-                    file(params.test_data['proteomics']['qc']['multiqc_config'], checkIfExists: false)
+                    file(params.test_data['proteomics']['qc']['diann_results'], checkIfExists: false)
                 ]
                 """
             }
@@ -82,14 +77,11 @@ nextflow_process {
 
         when {
             process {
-                ext {
-                    args = '--quantms_plugin --quantification_method lfq'
-                }
+                task.ext.args = '--quantms_plugin --quantification_method lfq'
                 """
                 input[0] = [
                     [ id: 'quantms_test' ],
-                    file(params.test_data['proteomics']['qc']['quantms_results'], checkIfExists: false),
-                    file(params.test_data['proteomics']['qc']['multiqc_config'], checkIfExists: false)
+                    file(params.test_data['proteomics']['qc']['quantms_results'], checkIfExists: false)
                 ]
                 """
             }
