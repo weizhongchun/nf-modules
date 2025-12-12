@@ -54,8 +54,14 @@ nextflow_process {
     test("Should generate MultiQC report for DIANN") {
 
         when {
+            params {
+                process {
+                    withName: 'PMULTIQC' {
+                        ext.args = '--quantification_method diann'
+                    }
+                }
+            }
             process {
-                task.ext.args = '--quantification_method diann'
                 """
                 input[0] = [
                     [ id: 'DIANN_test' ],
@@ -76,8 +82,14 @@ nextflow_process {
     test("Should generate MultiQC report for quantms") {
 
         when {
+            params {
+                process {
+                    withName: 'PMULTIQC' {
+                        ext.args = '--quantms_plugin --quantification_method lfq'
+                    }
+                }
+            }
             process {
-                task.ext.args = '--quantms_plugin --quantification_method lfq'
                 """
                 input[0] = [
                     [ id: 'quantms_test' ],
