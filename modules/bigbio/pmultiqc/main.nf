@@ -23,12 +23,7 @@ process PMULTIQC {
     def config = multiqc_config ? "--config ${multiqc_config}" : ''
 
     """
-    set -x
     set -e
-
-    # leaving here to ease debugging
-    ls -lcth *
-
     multiqc \\
         --force \\
         ${args} \\
