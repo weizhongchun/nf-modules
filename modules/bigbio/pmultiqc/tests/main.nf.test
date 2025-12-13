@@ -12,11 +12,33 @@ nextflow_process {
     test("Should generate MultiQC report") {
 
         when {
+            def zipUrl = params.test_data['proteomics']['qc']['results']
+            def zipFile = new File("test_results.zip")
+            zipFile.withOutputStream { out ->
+                out << new URL(zipUrl).openStream()
+            }
+            def resultsDir = new File("test_results")
+            resultsDir.mkdirs()
+            
+            // Extract zip using Groovy's built-in zip handling
+            new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
+                zip.entries().each { entry ->
+                    if (!entry.isDirectory()) {
+                        def file = new File(resultsDir, entry.name)
+                        file.parentFile.mkdirs()
+                        file.withOutputStream { out ->
+                            out << zip.getInputStream(entry)
+                        }
+                    }
+                }
+            }
+            zipFile.delete()
+            
             process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file(params.test_data['proteomics']['qc']['results'], checkIfExists: false)
+                    file(resultsDir, checkIfExists: false)
                 ]
                 input[1] = []
                 """
@@ -36,11 +58,33 @@ nextflow_process {
     test("Should generate MultiQC report with config") {
 
         when {
+            def zipUrl = params.test_data['proteomics']['qc']['results']
+            def zipFile = new File("test_results_config.zip")
+            zipFile.withOutputStream { out ->
+                out << new URL(zipUrl).openStream()
+            }
+            def resultsDir = new File("test_results_config")
+            resultsDir.mkdirs()
+            
+            // Extract zip using Groovy's built-in zip handling
+            new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
+                zip.entries().each { entry ->
+                    if (!entry.isDirectory()) {
+                        def file = new File(resultsDir, entry.name)
+                        file.parentFile.mkdirs()
+                        file.withOutputStream { out ->
+                            out << zip.getInputStream(entry)
+                        }
+                    }
+                }
+            }
+            zipFile.delete()
+            
             process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file(params.test_data['proteomics']['qc']['results'], checkIfExists: false)
+                    file(resultsDir, checkIfExists: false)
                 ]
                 input[1] = file('multiqc_config.yml', checkIfExists: false)
                 """
@@ -61,11 +105,33 @@ nextflow_process {
         config "./nextflow.config.diann"
 
         when {
+            def zipUrl = params.test_data['proteomics']['qc']['diann_results']
+            def zipFile = new File("test_diann.zip")
+            zipFile.withOutputStream { out ->
+                out << new URL(zipUrl).openStream()
+            }
+            def resultsDir = new File("test_diann_results")
+            resultsDir.mkdirs()
+            
+            // Extract zip using Groovy's built-in zip handling
+            new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
+                zip.entries().each { entry ->
+                    if (!entry.isDirectory()) {
+                        def file = new File(resultsDir, entry.name)
+                        file.parentFile.mkdirs()
+                        file.withOutputStream { out ->
+                            out << zip.getInputStream(entry)
+                        }
+                    }
+                }
+            }
+            zipFile.delete()
+            
             process {
                 """
                 input[0] = [
                     [ id: 'DIANN_test' ],
-                    file(params.test_data['proteomics']['qc']['diann_results'], checkIfExists: false)
+                    file(resultsDir, checkIfExists: false)
                 ]
                 input[1] = []
                 """
@@ -86,11 +152,33 @@ nextflow_process {
         config "./nextflow.config.quantms"
 
         when {
+            def zipUrl = params.test_data['proteomics']['qc']['quantms_results']
+            def zipFile = new File("test_quantms.zip")
+            zipFile.withOutputStream { out ->
+                out << new URL(zipUrl).openStream()
+            }
+            def resultsDir = new File("test_quantms_results")
+            resultsDir.mkdirs()
+            
+            // Extract zip using Groovy's built-in zip handling
+            new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
+                zip.entries().each { entry ->
+                    if (!entry.isDirectory()) {
+                        def file = new File(resultsDir, entry.name)
+                        file.parentFile.mkdirs()
+                        file.withOutputStream { out ->
+                            out << zip.getInputStream(entry)
+                        }
+                    }
+                }
+            }
+            zipFile.delete()
+            
             process {
                 """
                 input[0] = [
                     [ id: 'quantms_test' ],
-                    file(params.test_data['proteomics']['qc']['quantms_results'], checkIfExists: false)
+                    file(resultsDir, checkIfExists: false)
                 ]
                 input[1] = []
                 """
@@ -116,11 +204,33 @@ nextflow_process {
         options "-stub"
 
         when {
+            def zipUrl = params.test_data['proteomics']['qc']['results']
+            def zipFile = new File("test_stub.zip")
+            zipFile.withOutputStream { out ->
+                out << new URL(zipUrl).openStream()
+            }
+            def resultsDir = new File("test_stub_results")
+            resultsDir.mkdirs()
+            
+            // Extract zip using Groovy's built-in zip handling
+            new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
+                zip.entries().each { entry ->
+                    if (!entry.isDirectory()) {
+                        def file = new File(resultsDir, entry.name)
+                        file.parentFile.mkdirs()
+                        file.withOutputStream { out ->
+                            out << zip.getInputStream(entry)
+                        }
+                    }
+                }
+            }
+            zipFile.delete()
+            
             process {
                 """
                 input[0] = [
                     [ id: 'test_sample' ],
-                    file(params.test_data['proteomics']['qc']['results'], checkIfExists: false)
+                    file(resultsDir, checkIfExists: false)
                 ]
                 input[1] = []
                 """
