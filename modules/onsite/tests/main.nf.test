@@ -30,8 +30,7 @@ nextflow_process {
             assert process.out.ptm_in_id_onsite.size() == 1
             assert process.out.log.size() == 1
             // Check output file has correct naming
-            def outputFile = new File(process.out.ptm_in_id_onsite[0][1])
-            assert outputFile.name.endsWith('_ascore.idXML')
+            assert process.out.ptm_in_id_onsite[0][1].toString().endsWith('_ascore.idXML')
         }
     }
 
@@ -58,8 +57,7 @@ nextflow_process {
             assert process.out.ptm_in_id_onsite.size() == 1
             assert process.out.log.size() == 1
             // Check output file has correct naming
-            def outputFile = new File(process.out.ptm_in_id_onsite[0][1])
-            assert outputFile.name.endsWith('_phosphors.idXML')
+            assert process.out.ptm_in_id_onsite[0][1].toString().endsWith('_phosphors.idXML')
         }
     }
 
@@ -86,8 +84,7 @@ nextflow_process {
             assert process.out.ptm_in_id_onsite.size() == 1
             assert process.out.log.size() == 1
             // Check output file has correct naming
-            def outputFile = new File(process.out.ptm_in_id_onsite[0][1])
-            assert outputFile.name.endsWith('_lucxor.idXML')
+            assert process.out.ptm_in_id_onsite[0][1].toString().endsWith('_lucxor.idXML')
         }
     }
 
@@ -113,3 +110,4 @@ nextflow_process {
         }
     }
 }
+
