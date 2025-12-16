@@ -13,7 +13,7 @@ tools:
   - onsite:
       description: |
         Comprehensive Python package for mass spectrometry post-translational modification (PTM) localization.
-        Provides algorithms for confident phosphorylation site localization and scoring, including 
+        Provides algorithms for confident phosphorylation site localization and scoring, including
         implementations of AScore, PhosphoRS, and LucXor (LuciPHOr2).
       homepage: https://github.com/bigbio/onsite
       documentation: https://github.com/bigbio/onsite/blob/main/README.md
