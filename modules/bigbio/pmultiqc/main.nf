@@ -9,7 +9,7 @@ process PMULTIQC {
 
     input:
     tuple val(meta), path(results)
-    path(multiqc_config)
+    path multiqc_config
 
     output:
     tuple val(meta), path("*.html"), emit: report
@@ -20,7 +20,7 @@ process PMULTIQC {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def config = multiqc_config ? "--config ${multiqc_config}" : ''
+    def config = multiqc_config.name != 'input.2' ? "--config ${multiqc_config}" : ''
 
     """
     set -e

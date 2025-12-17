@@ -13,19 +13,19 @@ nextflow_process {
 
         when {
             def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
-            def zipFile = new File("test_results.zip")
+            def zipFile = file("test_results.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
             }
-            def resultsDir = new File("test_results")
+            def resultsDir = file("test_results")
             resultsDir.mkdirs()
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
                     if (!entry.isDirectory()) {
-                        def file = new File(resultsDir, entry.name)
-                        file.parentFile.mkdirs()
-                        file.withOutputStream { out ->
+                        def extractFile = new File(resultsDir, entry.name)
+                        extractFile.parentFile.mkdirs()
+                        extractFile.withOutputStream { out ->
                             out << zip.getInputStream(entry)
                         }
                     }
@@ -37,7 +37,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file('${resultsDir.absolutePath}', checkIfExists: false)
+                    file('${resultsDir}')
                 ]
                 input[1] = []
                 """
@@ -57,7 +57,7 @@ nextflow_process {
         }
 
         cleanup {
-            new File("test_results").deleteDir()
+            file("test_results").deleteDir()
         }
     }
 
@@ -65,19 +65,19 @@ nextflow_process {
 
         when {
             def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
-            def zipFile = new File("test_results_config.zip")
+            def zipFile = file("test_results_config.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
             }
-            def resultsDir = new File("test_results_config")
+            def resultsDir = file("test_results_config")
             resultsDir.mkdirs()
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
                     if (!entry.isDirectory()) {
-                        def file = new File(resultsDir, entry.name)
-                        file.parentFile.mkdirs()
-                        file.withOutputStream { out ->
+                        def extractFile = new File(resultsDir, entry.name)
+                        extractFile.parentFile.mkdirs()
+                        extractFile.withOutputStream { out ->
                             out << zip.getInputStream(entry)
                         }
                     }
@@ -89,9 +89,9 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file('${resultsDir.absolutePath}', checkIfExists: false)
+                    file('${resultsDir}')
                 ]
-                input[1] = file('multiqc_config.yml', checkIfExists: false)
+                input[1] = file('${projectDir}/modules/bigbio/pmultiqc/tests/multiqc_config.yml')
                 """
             }
         }
@@ -109,7 +109,7 @@ nextflow_process {
         }
 
         cleanup {
-            new File("test_results_config").deleteDir()
+            file("test_results_config").deleteDir()
         }
     }
 
@@ -118,19 +118,19 @@ nextflow_process {
 
         when {
             def zipUrl = (params.test_data?.proteomics?.qc?.diann_results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/PXD063291.zip"
-            def zipFile = new File("test_diann.zip")
+            def zipFile = file("test_diann.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
             }
-            def resultsDir = new File("test_diann_results")
+            def resultsDir = file("test_diann_results")
             resultsDir.mkdirs()
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
                     if (!entry.isDirectory()) {
-                        def file = new File(resultsDir, entry.name)
-                        file.parentFile.mkdirs()
-                        file.withOutputStream { out ->
+                        def extractFile = new File(resultsDir, entry.name)
+                        extractFile.parentFile.mkdirs()
+                        extractFile.withOutputStream { out ->
                             out << zip.getInputStream(entry)
                         }
                     }
@@ -142,7 +142,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'DIANN_test' ],
-                    file('${resultsDir.absolutePath}', checkIfExists: false)
+                    file('${resultsDir}')
                 ]
                 input[1] = []
                 """
@@ -162,7 +162,7 @@ nextflow_process {
         }
 
         cleanup {
-            new File("test_diann_results").deleteDir()
+            file("test_diann_results").deleteDir()
         }
     }
 
@@ -171,19 +171,19 @@ nextflow_process {
 
         when {
             def zipUrl = (params.test_data?.proteomics?.qc?.quantms_results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
-            def zipFile = new File("test_quantms.zip")
+            def zipFile = file("test_quantms.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
             }
-            def resultsDir = new File("test_quantms_results")
+            def resultsDir = file("test_quantms_results")
             resultsDir.mkdirs()
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
                     if (!entry.isDirectory()) {
-                        def file = new File(resultsDir, entry.name)
-                        file.parentFile.mkdirs()
-                        file.withOutputStream { out ->
+                        def extractFile = new File(resultsDir, entry.name)
+                        extractFile.parentFile.mkdirs()
+                        extractFile.withOutputStream { out ->
                             out << zip.getInputStream(entry)
                         }
                     }
@@ -195,7 +195,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'quantms_test' ],
-                    file('${resultsDir.absolutePath}', checkIfExists: false)
+                    file('${resultsDir}')
                 ]
                 input[1] = []
                 """
@@ -219,7 +219,7 @@ nextflow_process {
         }
 
         cleanup {
-            new File("test_quantms_results").deleteDir()
+            file("test_quantms_results").deleteDir()
         }
     }
 
@@ -229,19 +229,19 @@ nextflow_process {
 
         when {
             def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
-            def zipFile = new File("test_stub.zip")
+            def zipFile = file("test_stub.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
             }
-            def resultsDir = new File("test_stub_results")
+            def resultsDir = file("test_stub_results")
             resultsDir.mkdirs()
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
                     if (!entry.isDirectory()) {
-                        def file = new File(resultsDir, entry.name)
-                        file.parentFile.mkdirs()
-                        file.withOutputStream { out ->
+                        def extractFile = new File(resultsDir, entry.name)
+                        extractFile.parentFile.mkdirs()
+                        extractFile.withOutputStream { out ->
                             out << zip.getInputStream(entry)
                         }
                     }
@@ -253,7 +253,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test_sample' ],
-                    file('${resultsDir.absolutePath}', checkIfExists: false)
+                    file('${resultsDir}')
                 ]
                 input[1] = []
                 """
@@ -272,7 +272,8 @@ nextflow_process {
         }
 
         cleanup {
-            new File("test_stub_results").deleteDir()
+            file("test_stub_results").deleteDir()
         }
     }
 }
+
