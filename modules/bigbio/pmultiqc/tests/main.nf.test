@@ -37,7 +37,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file('${resultsDir}')
+                    file('test_results')
                 ]
                 input[1] = []
                 """
@@ -89,7 +89,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file('${resultsDir}')
+                    file('test_results_config')
                 ]
                 input[1] = file('${projectDir}/modules/bigbio/pmultiqc/tests/multiqc_config.yml')
                 """
@@ -142,7 +142,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'DIANN_test' ],
-                    file('${resultsDir}')
+                    file('test_diann_results')
                 ]
                 input[1] = []
                 """
@@ -195,7 +195,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'quantms_test' ],
-                    file('${resultsDir}')
+                    file('test_quantms_results')
                 ]
                 input[1] = []
                 """
@@ -253,7 +253,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test_sample' ],
-                    file('${resultsDir}')
+                    file('test_stub_results')
                 ]
                 input[1] = []
                 """
