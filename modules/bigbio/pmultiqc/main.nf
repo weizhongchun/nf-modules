@@ -20,7 +20,7 @@ process PMULTIQC {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def config = multiqc_config.name != 'input.2' ? "--config ${multiqc_config}" : ''
+    def config = multiqc_config.name.startsWith('input') ? '' : "--config ${multiqc_config}"
 
     """
     set -e
