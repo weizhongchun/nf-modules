@@ -37,7 +37,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file(resultsDir, checkIfExists: false)
+                    file('test_results', checkIfExists: false)
                 ]
                 input[1] = []
                 """
@@ -45,12 +45,11 @@ nextflow_process {
         }
 
         then {
-            assertAll(
-                { assert process.success },
-                { assert process.out.report[0][1] ==~ ".*\\.html" },
-                { assert process.out.data[0] ==~ ".*_data" },
-                { assert snapshot(process.out.versions).match("versions") }
-            )
+            // Ensure the process succeeded before checking outputs to avoid NPEs
+            assert process.success: "Process failed; check work dir: ${process.workDir} and logs"
+            assert process.out.report[0][1] ==~ ".*\\.html"
+            assert process.out.data[0] ==~ ".*_data"
+            assert snapshot(process.out.versions).match("versions")
         }
     }
 
@@ -82,7 +81,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test' ],
-                    file(resultsDir, checkIfExists: false)
+                    file('test_results_config', checkIfExists: false)
                 ]
                 input[1] = file('multiqc_config.yml', checkIfExists: false)
                 """
@@ -90,12 +89,11 @@ nextflow_process {
         }
 
         then {
-            assertAll(
-                { assert process.success },
-                { assert process.out.report[0][1] ==~ ".*\\.html" },
-                { assert process.out.data[0] ==~ ".*_data" },
-                { assert snapshot(process.out.versions).match("versions") }
-            )
+            // Ensure the process succeeded before checking outputs to avoid NPEs
+            assert process.success: "Process failed; check work dir: ${process.workDir} and logs"
+            assert process.out.report[0][1] ==~ ".*\\.html"
+            assert process.out.data[0] ==~ ".*_data"
+            assert snapshot(process.out.versions).match("versions")
         }
     }
 
@@ -128,7 +126,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'DIANN_test' ],
-                    file(resultsDir, checkIfExists: false)
+                    file('test_diann_results', checkIfExists: false)
                 ]
                 input[1] = []
                 """
@@ -174,7 +172,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'quantms_test' ],
-                    file(resultsDir, checkIfExists: false)
+                    file('test_quantms_results', checkIfExists: false)
                 ]
                 input[1] = []
                 """
@@ -200,7 +198,7 @@ nextflow_process {
         options "-stub"
 
         when {
-            def zipUrl = params.test_data['proteomics']['qc']['results']
+            def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
             def zipFile = new File("test_stub.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
@@ -225,7 +223,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id: 'test_sample' ],
-                    file(resultsDir, checkIfExists: false)
+                    file('test_stub_results', checkIfExists: false)
                 ]
                 input[1] = []
                 """
