@@ -12,7 +12,7 @@ nextflow_process {
     test("Should generate MultiQC report") {
 
         when {
-            def zipUrl = params.test_data['proteomics']['qc']['results']
+            def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
             def zipFile = new File("test_results.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
@@ -57,7 +57,7 @@ nextflow_process {
     test("Should generate MultiQC report with config") {
 
         when {
-            def zipUrl = params.test_data['proteomics']['qc']['results']
+            def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
             def zipFile = new File("test_results_config.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
@@ -103,7 +103,7 @@ nextflow_process {
         config "./nextflow.config.diann"
 
         when {
-            def zipUrl = params.test_data['proteomics']['qc']['diann_results']
+            def zipUrl = (params.test_data?.proteomics?.qc?.diann_results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/PXD063291.zip"
             def zipFile = new File("test_diann.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
@@ -149,7 +149,7 @@ nextflow_process {
         config "./nextflow.config.quantms"
 
         when {
-            def zipUrl = params.test_data['proteomics']['qc']['quantms_results']
+            def zipUrl = (params.test_data?.proteomics?.qc?.quantms_results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
             def zipFile = new File("test_quantms.zip")
             zipFile.withOutputStream { out ->
                 out << new URL(zipUrl).openStream()
