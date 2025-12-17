@@ -1,3 +1,5 @@
+includeConfig '../../../tests/config/nextflow.config'
+
 process {
     publishDir = { "${params.outdir}/${task.process.tokenize(':')[-1].tokenize('_')[0].toLowerCase()}" }
     withName: 'PMULTIQC' {

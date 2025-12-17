@@ -19,7 +19,6 @@ nextflow_process {
             }
             def resultsDir = new File("test_results")
             resultsDir.mkdirs()
-            
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
@@ -33,7 +32,7 @@ nextflow_process {
                 }
             }
             zipFile.delete()
-            
+
             process {
                 """
                 input[0] = [
@@ -65,7 +64,6 @@ nextflow_process {
             }
             def resultsDir = new File("test_results_config")
             resultsDir.mkdirs()
-            
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
@@ -79,7 +77,7 @@ nextflow_process {
                 }
             }
             zipFile.delete()
-            
+
             process {
                 """
                 input[0] = [
@@ -112,7 +110,6 @@ nextflow_process {
             }
             def resultsDir = new File("test_diann_results")
             resultsDir.mkdirs()
-            
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
@@ -126,7 +123,7 @@ nextflow_process {
                 }
             }
             zipFile.delete()
-            
+
             process {
                 """
                 input[0] = [
@@ -159,7 +156,6 @@ nextflow_process {
             }
             def resultsDir = new File("test_quantms_results")
             resultsDir.mkdirs()
-            
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
@@ -173,7 +169,7 @@ nextflow_process {
                 }
             }
             zipFile.delete()
-            
+
             process {
                 """
                 input[0] = [
@@ -211,7 +207,6 @@ nextflow_process {
             }
             def resultsDir = new File("test_stub_results")
             resultsDir.mkdirs()
-            
             // Extract zip using Groovy's built-in zip handling
             new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
                 zip.entries().each { entry ->
@@ -225,7 +220,7 @@ nextflow_process {
                 }
             }
             zipFile.delete()
-            
+
             process {
                 """
                 input[0] = [
