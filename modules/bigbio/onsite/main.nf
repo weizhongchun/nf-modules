@@ -4,8 +4,8 @@ process ONSITE {
     label 'onsite'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pyonsite:0.0.1--pyhdfd78af_0' :
-        'quay.io/biocontainers/pyonsite:0.0.1--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/pyonsite:0.0.2--pyhdfd78af_0' :
+        'quay.io/biocontainers/pyonsite:0.0.2--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(mzml_file), path(id_file)
