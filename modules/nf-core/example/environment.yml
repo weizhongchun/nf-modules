@@ -1,7 +1,0 @@
-name: example
-channels:
-    - conda-forge
-    - bioconda
-    - defaults
-dependencies:
-    - bioconda::your-tool=1.0.0
