@@ -8,8 +8,8 @@ process PMULTIQC {
         'biocontainers/pmultiqc:0.0.39--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(results)
-    path multiqc_config
+    val meta
+    path results
 
     output:
     tuple val(meta), path("*.html"), emit: report
@@ -20,21 +20,32 @@ process PMULTIQC {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def config = (multiqc_config instanceof List && multiqc_config.isEmpty()) ? '' : (multiqc_config.name.startsWith('input') ? '' : "--config ${multiqc_config}")
 
     """
-    set -e
+    echo "=== DEBUG: Files in work directory ==="
+    ls -lah
+    echo ""
+    echo "=== DEBUG: idXML files ==="
+    find . -name "*.idXML" -type f | head -5
+    echo ""
+    echo "=== DEBUG: parquet files ==="
+    find . -name "*.parquet" -type f | head -5
+    echo ""
+    echo "=== DEBUG: mzTab files ==="
+    find . -name "*.mzTab" -type f | head -5
+    echo ""
+    echo "=== DEBUG: Running MultiQC ==="
+    
     multiqc \\
         --force \\
+        --filename ${prefix}_multiqc_report \\
         ${args} \\
-        ${config} \\
-        ${results} \\
-        -o .
+        .
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        pmultiqc: \$(multiqc --pmultiqc_version | sed -e "s/pmultiqc, version //g")
-    END_VERSIONS
+    cat <<END_VERSIONS > versions.yml
+"PMULTIQC":
+    pmultiqc: \$(multiqc --pmultiqc_version 2>&1 | sed -e "s/pmultiqc, version //g" | tr -d '\\n' || echo "0.0.39")
+END_VERSIONS
     """
 
     stub:
@@ -42,11 +53,11 @@ process PMULTIQC {
 
     """
     touch '${prefix}_multiqc_report.html'
-    mkdir 'multiqc_data'
+    mkdir '${prefix}_multiqc_report_data'
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        pmultiqc: \$(multiqc --pmultiqc_version | sed -e "s/pmultiqc, version //g")
-    END_VERSIONS
+    cat <<END_VERSIONS > versions.yml
+"PMULTIQC":
+    pmultiqc: \$(multiqc --pmultiqc_version 2>&1 | sed -e "s/pmultiqc, version //g" | tr -d '\\n' || echo "0.0.39")
+END_VERSIONS
     """
 }

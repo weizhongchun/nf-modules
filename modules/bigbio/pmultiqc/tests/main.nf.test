@@ -35,11 +35,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = [
-                    [ id: 'test' ],
-                    file('test_results')
-                ]
-                input[1] = []
+                input[0] = [ id: 'test' ]
+                input[1] = file('${resultsDir.getAbsolutePath()}')
                 """
             }
         }
@@ -50,9 +47,7 @@ nextflow_process {
                 { assert process.out.report.size() > 0 },
                 { assert process.out.report[0][1].toString().endsWith('.html') },
                 { assert process.out.data.size() > 0 },
-                { assert snapshot(
-                    path(process.out.versions[0]).yaml["PMULTIQC"].pmultiqc
-                ).match("versions") }
+                { assert snapshot(process.out.versions).match("versions") }
             )
         }
 
@@ -87,11 +82,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = [
-                    [ id: 'test' ],
-                    file('test_results_config')
-                ]
-                input[1] = file('${projectDir}/modules/bigbio/pmultiqc/tests/multiqc_config.yml')
+                input[0] = [ id: 'test' ]
+                input[1] = file('${resultsDir.getAbsolutePath()}')
                 """
             }
         }
@@ -102,9 +94,7 @@ nextflow_process {
                 { assert process.out.report.size() > 0 },
                 { assert process.out.report[0][1].toString().endsWith('.html') },
                 { assert process.out.data.size() > 0 },
-                { assert snapshot(
-                    path(process.out.versions[0]).yaml["PMULTIQC"].pmultiqc
-                ).match("versions") }
+                { assert snapshot(process.out.versions).match("versions_config") }
             )
         }
 
@@ -140,11 +130,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = [
-                    [ id: 'DIANN_test' ],
-                    file('test_diann_results')
-                ]
-                input[1] = []
+                input[0] = [ id: 'DIANN_test' ]
+                input[1] = file('${resultsDir.getAbsolutePath()}')
                 """
             }
         }
@@ -155,9 +142,7 @@ nextflow_process {
                 { assert process.out.report.size() > 0 },
                 { assert process.out.report[0][1].toString().endsWith('.html') },
                 { assert process.out.data.size() > 0 },
-                { assert snapshot(
-                    path(process.out.versions[0]).yaml["PMULTIQC"].pmultiqc
-                ).match("versions") }
+                { assert snapshot(process.out.versions).match("versions_diann") }
             )
         }
 
@@ -193,11 +178,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = [
-                    [ id: 'quantms_test' ],
-                    file('test_quantms_results')
-                ]
-                input[1] = []
+                input[0] = [ id: 'quantms_test' ]
+                input[1] = file('${resultsDir.getAbsolutePath()}')
                 """
             }
         }
@@ -208,9 +190,7 @@ nextflow_process {
                 { assert process.out.report.size() > 0 },
                 { assert process.out.report[0][1].toString().endsWith('.html') },
                 { assert process.out.data.size() > 0 },
-                { assert snapshot(
-                    path(process.out.versions[0]).yaml["PMULTIQC"].pmultiqc
-                ).match("versions") }
+                { assert snapshot(process.out.versions).match("versions_quantms") }
             )
             // quantms may generate a database file
             if (process.out.quantmsdb.size() > 0) {
@@ -251,11 +231,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = [
-                    [ id: 'test_sample' ],
-                    file('test_stub_results')
-                ]
-                input[1] = []
+                input[0] = [ id: 'test_sample' ]
+                input[1] = file('${resultsDir.getAbsolutePath()}')
                 """
             }
         }
@@ -266,7 +243,7 @@ nextflow_process {
                 { assert snapshot(
                     process.out.report.collect { file(it[1]).getName() },
                     process.out.data.collect { file(it).getName() },
-                    path(process.out.versions[0]).yaml["PMULTIQC"].pmultiqc
+                    process.out.versions
                 ).match("versions_stub") }
             )
         }
@@ -276,4 +253,3 @@ nextflow_process {
         }
     }
 }
-

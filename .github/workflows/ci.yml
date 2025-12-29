@@ -175,8 +175,6 @@ jobs:
                   sudo mv nf-test /usr/local/bin/
 
             - name: Run nf-test for ${{ matrix.module }}
-              env:
-                  PROFILE: ${{ matrix.profile }}
               run: |
                   MODULE_PATH="${{ matrix.module }}"
                   TEST_FILE="modules/${MODULE_PATH}/tests/main.nf.test"
@@ -196,6 +194,7 @@ jobs:
                   # Run nf-test
                   # Docker is configured in tests/config/nextflow.config
                   nf-test test \
+                      --profile ${{ matrix.profile }} \
                       --tap test_results/${MODULE_PATH}/test.tap \
                       ${TEST_FILE}
 
