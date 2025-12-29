@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::pyonsite=0.0.1
+  - bioconda::pyonsite=0.0.2
