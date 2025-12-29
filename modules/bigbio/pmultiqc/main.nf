@@ -35,7 +35,7 @@ process PMULTIQC {
     find . -name "*.mzTab" -type f | head -5
     echo ""
     echo "=== DEBUG: Running MultiQC ==="
-    
+
     multiqc \\
         --force \\
         --filename ${prefix}_multiqc_report \\
