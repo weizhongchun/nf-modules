@@ -77,7 +77,6 @@ process ONSITE {
         def scoring_threshold = params.onsite_scoring_threshold ?: '0.0'
         def min_num_psms = params.onsite_min_num_psms_model ?: '5'
         def rt_tolerance = params.onsite_rt_tolerance ?: '0.01'
-        def min_psms = params.onsite_min_psms ?: '5'
         def disable_split_by_charge = params.onsite_disable_split_by_charge ? '--disable-split-by-charge' : ''
 
         // Optional target modifications - default for LucXor includes decoy
