@@ -188,14 +188,15 @@ jobs:
                       exit 1
                   fi
 
-                  # Create test results directory
-                  mkdir -p test_results/${MODULE_PATH}
+                  # Create test results directory with absolute path
+                  TEST_RESULTS_DIR="${PWD}/test_results/${MODULE_PATH}"
+                  mkdir -p "${TEST_RESULTS_DIR}"
 
                   # Run nf-test
                   # Docker is configured in tests/config/nextflow.config
                   nf-test test \
                       --profile ${{ matrix.profile }} \
-                      --tap test_results/${MODULE_PATH}/test.tap \
+                      --tap "${TEST_RESULTS_DIR}/test.tap" \
                       ${TEST_FILE}
 
             - name: Sanitize module name for artifact
