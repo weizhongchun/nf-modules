@@ -183,14 +183,9 @@ jobs:
               exit 1
           fi
 
-          # Create test results directory with absolute path
-          TEST_RESULTS_DIR="${PWD}/test_results/${MODULE_PATH}"
-          mkdir -p "${TEST_RESULTS_DIR}"
-
-          # Run nf-test with profile
+          # Run nf-test with profile (without TAP output to avoid path issues)
           nf-test test \
               --profile ${{ matrix.profile }} \
-              --tap "${TEST_RESULTS_DIR}/test.tap" \
               ${TEST_FILE}
 
       - name: Sanitize module name for artifact

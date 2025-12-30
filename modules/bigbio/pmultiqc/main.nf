@@ -22,20 +22,6 @@ process PMULTIQC {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    echo "=== DEBUG: Files in work directory ==="
-    ls -lah
-    echo ""
-    echo "=== DEBUG: idXML files ==="
-    find . -name "*.idXML" -type f | head -5
-    echo ""
-    echo "=== DEBUG: parquet files ==="
-    find . -name "*.parquet" -type f | head -5
-    echo ""
-    echo "=== DEBUG: mzTab files ==="
-    find . -name "*.mzTab" -type f | head -5
-    echo ""
-    echo "=== DEBUG: Running MultiQC ==="
-
     multiqc \\
         --force \\
         --filename ${prefix}_multiqc_report \\
@@ -44,7 +30,7 @@ process PMULTIQC {
 
     cat <<END_VERSIONS > versions.yml
 "PMULTIQC":
-    pmultiqc: \$(multiqc --pmultiqc_version 2>&1 | sed -e "s/pmultiqc, version //g" | tr -d '\\n' || echo "0.0.39")
+    pmultiqc: \$(python -c "from importlib.metadata import version; print(version('pmultiqc'))" 2>/dev/null || echo "0.0.39")
 END_VERSIONS
     """
 
@@ -57,7 +43,7 @@ END_VERSIONS
 
     cat <<END_VERSIONS > versions.yml
 "PMULTIQC":
-    pmultiqc: \$(multiqc --pmultiqc_version 2>&1 | sed -e "s/pmultiqc, version //g" | tr -d '\\n' || echo "0.0.39")
+    pmultiqc: \$(python -c "from importlib.metadata import version; print(version('pmultiqc'))" 2>/dev/null || echo "0.0.39")
 END_VERSIONS
     """
 }
