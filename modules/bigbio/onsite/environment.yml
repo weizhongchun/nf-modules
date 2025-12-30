@@ -1,7 +1,7 @@
-name: thermorawfileparser
+name: onsite
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::thermorawfileparser=1.4.5
+  - bioconda::pyonsite=0.0.2
