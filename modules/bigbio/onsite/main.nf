@@ -19,11 +19,12 @@ process ONSITE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
-    // Algorithm selection: ascore (default), phosphors, or lucxor
-    def algorithm = params.onsite_algorithm ?: 'ascore'
+    // Algorithm selection: lucxor (default), ascore, or phosphors
+    def algorithm = params.onsite_algorithm ?: 'lucxor'
 
     // Common parameters for all algorithms
     def fragment_tolerance = params.onsite_fragment_tolerance ?: '0.05'
+    def compute_all_scores = params.onsite_compute_all_scores ? '--compute-all-scores' : ''
 
     // Set default value for add_decoys (can be overridden by setting params.onsite_add_decoys = false)
     def onsite_add_decoys = params.containsKey('onsite_add_decoys') ? params.onsite_add_decoys : true
@@ -47,8 +48,8 @@ process ONSITE {
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-mass-unit ${fragment_unit} \\
             ${add_decoys} \\
-            ${debug} \\
-            ${args}
+            ${compute_all_scores} \\
+            ${debug}
         """
     } else if (algorithm == 'phosphors') {
         // PhosphoRS: uses -in, -id, -out, --fragment-mass-unit
@@ -61,8 +62,8 @@ process ONSITE {
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-mass-unit ${fragment_unit} \\
             ${add_decoys} \\
-            ${debug} \\
-            ${args}
+            ${compute_all_scores} \\
+            ${debug}
         """
     } else if (algorithm == 'lucxor') {
         // LucXor: uses -in, -id, -out, --fragment-error-units (note: error-units not mass-unit)
@@ -74,8 +75,10 @@ process ONSITE {
         def max_num_perm = params.onsite_max_num_perm ?: '16384'
         def modeling_threshold = params.onsite_modeling_score_threshold ?: '0.95'
         def scoring_threshold = params.onsite_scoring_threshold ?: '0.0'
-        def min_num_psms = params.onsite_min_num_psms_model ?: '50'
+        def min_num_psms = params.onsite_min_num_psms_model ?: '5'
         def rt_tolerance = params.onsite_rt_tolerance ?: '0.01'
+        def min_psms = params.onsite_min_psms ?: '5'
+        def disable_split_by_charge = params.onsite_disable_split_by_charge ? '--disable-split-by-charge' : ''
 
         // Optional target modifications - default for LucXor includes decoy
         def target_mods = params.onsite_target_modifications ? "--target-modifications ${params.onsite_target_modifications}" : "--target-modifications 'Phospho(S),Phospho(T),Phospho(Y),PhosphoDecoy(A)'"
@@ -103,8 +106,10 @@ process ONSITE {
             --scoring-threshold ${scoring_threshold} \\
             --min-num-psms-model ${min_num_psms} \\
             --rt-tolerance ${rt_tolerance} \\
-            ${debug} \\
-            ${args}
+            --min-psms ${min_psms} \\
+            ${disable_split_by_charge} \\
+            ${compute_all_scores} \\
+            ${debug}
         """
     } else {
         error "Unknown onsite algorithm: ${algorithm}. Supported algorithms: ascore, phosphors, lucxor"
