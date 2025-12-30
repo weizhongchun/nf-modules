@@ -106,7 +106,6 @@ process ONSITE {
             --scoring-threshold ${scoring_threshold} \\
             --min-num-psms-model ${min_num_psms} \\
             --rt-tolerance ${rt_tolerance} \\
-            --min-psms ${min_psms} \\
             ${disable_split_by_charge} \\
             ${compute_all_scores} \\
             ${debug}
