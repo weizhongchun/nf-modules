@@ -8,53 +8,39 @@ tools:
   - pmultiqc:
       description: |
         A library for proteomics QC report based on MultiQC framework.
-        Use `task.ext.args` to pass additional arguments, e.g.:
-        - `--quantms_plugin` for quantms/dia/tmt/lfq data
-        - `--diann_plugin` for DIANN data
-        - `--maxquant_plugin` for MaxQuant data
-        - `--proteobench_plugin` for ProteoBench data
-        - `--mzid_plugin` for mzID data
-        - `--disable_table` to disable table plots
-        - `--ignored_idxml` to ignore idxML files
-        - `--contaminant_affix VALUE` to specify contaminant affix
-        - `--quantification_method VALUE` to specify quantification method (used with quantms_plugin)
       homepage: https://github.com/bigbio/pmultiqc/
       documentation: https://github.com/bigbio/pmultiqc/
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'sample1' ]
-  - results:
-      type: directory
-      description: |
-        Directory containing results files to be analyzed by MultiQC
-  - multiqc_config:
+  - expdesign:
       type: file
-      description: |
-        MultiQC configuration file (optional)
-      pattern: "*.yml"
+      description: experimental design file in openms style
+  - mzmls:
+      type: dir
+      description: mzML files directory
+  - quantms_results:
+      type: dir
+      description: the directory of quantms results including out.mzTab/out_msstats.csv
+  - raw_ids:
+      type: dir
+      description: idXML files directory
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'sample1' ]
   - report:
       type: file
       description: MultiQC report file
-      pattern: "*.html"
+      pattern: "multiqc_report.html"
   - quantmsdb:
       type: file
-      description: |
-        Sqlite3 database file storing protein, psm and quantification information (optional)
+      description: Sqlite3 database file stored protein psm and quantificaiton information
       pattern: "*.db"
   - data:
+      type: dir
+      description: MultiQC data dir
+      pattern: "multiqc_data"
+  - plots:
       type: file
       description: Plots created by MultiQC
       pattern: "*_data"
-  - versions:
+  - version:
       type: file
       description: File containing software version
       pattern: "versions.yml"
