@@ -1,6 +1,7 @@
 process PMULTIQC {
     label 'process_high'
 
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.39--pyhdfd78af_0' :
         'biocontainers/pmultiqc:0.0.39--pyhdfd78af_0' }"
