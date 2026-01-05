@@ -108,8 +108,7 @@ process ONSITE {
     }
 
     """
-    ${algorithm_cmd} \\
-        2>&1 | tee ${id_file.baseName}_${algorithm}.log
+    ${algorithm_cmd.trim()} 2>&1 | tee ${id_file.baseName}_${algorithm}.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
